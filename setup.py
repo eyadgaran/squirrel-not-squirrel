@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='squirrel',
       version='1.0',
@@ -6,8 +6,8 @@ setup(name='squirrel',
       url='',
       author=['Elisha Yadgaran', 'Justin Su'],
       author_email=['elisha.yadgaran@qpidhealth.com', 'justin.su@qpidhealth.com'],
-      license='',
-      packages=['src', 'src/database', 'src/static', 'src/templates', 'src/views'],
+      license='MIT',
+      packages=find_packages(),
       install_requires=[],
       test_suite='nose.collector',
       tests_require=['nose'],

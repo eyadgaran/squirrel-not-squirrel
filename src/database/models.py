@@ -1,31 +1,41 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import Column, Integer, String
-# from app import db
+from sqlalchemy import Column, Integer, String, Numeric
+from sqlalchemy_mixins import AllFeaturesMixin
+from src.app import app
 
-engine = create_engine('sqlite:///database.db', echo=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+db_session = scoped_session(sessionmaker(autocommit=True,
                                          autoflush=False,
                                          bind=engine))
 Base = declarative_base()
-Base.query = db_session.query_property()
+# Base.query = db_session.query_property()
 
-# Set your classes here.
 
-'''
-class User(Base):
-    __tablename__ = 'Users'
+class BaseModel(Base, AllFeaturesMixin):
+    __abstract__ = True
+    pass
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(30))
 
-    def __init__(self, name=None, password=None):
-        self.name = name
-        self.password = password
-'''
+class Feedback(BaseModel):
+    __tablename__ = 'requests'
+
+    id = Column(Integer, primary_key=True)
+    feedback = Column(String(1200), nullable=False)
+
+
+class ModelHistory(BaseModel):
+    __tablename__ = 'model_history'
+
+    id = Column(Integer, primary_key=True)
+    filename = Column(String(), unique=True)
+    prediction_probability = Column(Numeric)
+    prediction = Column(Integer)
+    user_label = Column(Integer)
+    label = Column(Integer)
+
 
 # Create tables.
 Base.metadata.create_all(bind=engine)
+BaseModel.set_session(db_session)

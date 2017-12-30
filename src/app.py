@@ -2,7 +2,7 @@ from flask import Flask
 
 # template_dir = os.path.abspath('../templates')
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('config.FlaskConfig')
 
 
 if __name__ == '__main__':
@@ -11,6 +11,7 @@ if __name__ == '__main__':
     from views.home import *
     from views.login import *
 
+    from database import models
 
     print app.url_map
     app.run(host='0.0.0.0', port=6800, debug=True)

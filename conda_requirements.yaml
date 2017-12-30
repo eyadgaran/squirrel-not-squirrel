@@ -19,12 +19,14 @@ dependencies:
 - flask=0.12.2=py27_0
 - itsdangerous=0.24=py27_0
 - jinja2=2.9.6=py27_0
+- libpq=9.5.4=0
 - markupsafe=1.0=py27_0
 - mkl=2017.0.3=0
 - numpy=1.13.1=py27_0
 - openssl=1.0.2l=0
 - pandas=0.20.3=py27_0
 - pip=9.0.1=py27_1
+- psycopg2=2.7.1=py27_0
 - python=2.7.13=0
 - python-dateutil=2.6.1=py27_0
 - pytz=2017.2=py27_0
@@ -38,9 +40,13 @@ dependencies:
 - wheel=0.29.0=py27_0
 - zlib=1.2.11=0
 - pip:
+  - flask-sqlalchemy==2.3.2
   - flask-uploads==0.2.1
   - flask-wtf==0.14.2
-  - squirrel (/Users/elisha.yadgaran/Documents/squirrel-watch)==1.0
+  - olefile==0.44
+  - pillow==4.3.0
+  - sqlalchemy==1.1.15
+  - sqlalchemy-mixins==0.2.3
+  - typing==3.6.2
   - wtforms==2.1
 prefix: /Users/elisha.yadgaran/miniconda2/envs/squirrel
-
