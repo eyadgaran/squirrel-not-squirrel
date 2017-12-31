@@ -20,7 +20,8 @@ def upload():
     if request.method == 'POST' and 'photo' in request.files:
         filename = photos.save(request.files['photo'])
         history = predict(filename)
-
+        negation = '' if history.prediction else 'NOT'
+        return render_template('pages/prediction.html', prediction=negation, filename=filename)
     return render_template('forms/upload.html')
 
 
