@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Numeric
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, func
 from sqlalchemy_mixins import AllFeaturesMixin
 from src.app import app
 
@@ -15,7 +15,8 @@ Base = declarative_base()
 
 class BaseModel(Base, AllFeaturesMixin):
     __abstract__ = True
-    pass
+    created_timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    modified_timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), server_onupdate=func.now())
 
 
 class Feedback(BaseModel):
@@ -37,5 +38,6 @@ class ModelHistory(BaseModel):
 
 
 # Create tables.
+# Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 BaseModel.set_session(db_session)

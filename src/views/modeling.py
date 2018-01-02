@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, flash, redirect, url_for
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
 from keras.models import load_model
@@ -46,8 +46,16 @@ def predict(filename):
     return history
 
 
-@app.route('/model_feedback/<user_label>', methods=['GET'])
-def model_feedback(user_label):
-    feedback = Feedback.create(feedback=user_label)
+@app.route('/feedback', methods=['GET'])
+def feedback():
+    return render_template('pages/feedback.html')
 
-    return jsonify({'feedback': feedback.id}), 200
+
+@app.context_processor
+def feedback_processor():
+    def record_feedback():
+        user_feedback = "blah" #request.form['feedback']
+        Feedback.create(feedback=user_feedback)
+        flash("Your feedback was recorded. Thank You!")
+        return redirect(url_for('home'))
+    return dict(record_feedback=record_feedback)
