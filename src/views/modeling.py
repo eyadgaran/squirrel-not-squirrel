@@ -2,6 +2,7 @@ from flask import request, jsonify, render_template, flash, redirect, url_for
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
 from keras.models import load_model
+import tensorflow as tf
 import numpy as np
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from src.app import app
@@ -13,7 +14,7 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
 model = load_model('modeling/retrained_model')
-
+graph = tf.get_default_graph()
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -33,7 +34,9 @@ def predict(filename):
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)
-    prediction_probability = model.predict(x)
+    global graph
+    with graph.as_default():
+        prediction_probability = float(model.predict(x))
     prediction = int(round(prediction_probability, 0))
 
     # DB
