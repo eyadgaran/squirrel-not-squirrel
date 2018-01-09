@@ -12,7 +12,7 @@ from src.database.models import ModelHistory, Feedback
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
-# model = load_model('retrained_model')
+model = load_model('modeling/retrained_model')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -33,7 +33,7 @@ def predict(filename):
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)
-    prediction_probability = 0 #model.predict(x)
+    prediction_probability = model.predict(x)
     prediction = int(round(prediction_probability, 0))
 
     # DB
