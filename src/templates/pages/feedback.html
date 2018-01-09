@@ -1,0 +1,14 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Feedback{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Feedback</h1>
+  <h3>Drop us a line here with your feedback. Feel free to include feature requests, bugs, or anything else that comes to mind!
+</div>
+<form action="{{ record_feedback() }}" method="post">
+    <input type="text" name="feedback">
+    <input type="submit">
+</form>
+
+{% endblock %}

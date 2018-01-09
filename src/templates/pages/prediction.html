@@ -1,0 +1,20 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>It's {{prediction}} a Squirrel!</h1>
+</div>
+
+<div class="container-fluid">
+  <img alt="Bootstrap Image Preview" src="static/uploads/{{filename}}" class="img-rounded">
+  <form method=POST enctype=multipart/form-data action="{{ url_for('home') }}">
+      <h2>Was I right??</h2>
+      <input type="submit" value="Yes :)">
+      <input type="submit" value="No :(">
+  </form>
+</div>
+
+
+
+{% endblock %}
