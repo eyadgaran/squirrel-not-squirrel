@@ -9,6 +9,9 @@ import os
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
 
+current_directory = os.path.dirname(os.path.realpath(__name__))
+data_directory = os.path.abspath(os.path.join(current_directory, '../../data'))
+
 
 def load_img(img_path):
     img = image.load_img(img_path, target_size=(224, 224))
@@ -20,13 +23,28 @@ def load_img(img_path):
 def load_dataset():
     X = []
     y = []
-    for filename in os.listdir('../../data/'):
+    for filename in os.listdir(data_directory):
+        if not os.path.isfile(os.path.join(data_directory, filename)):
+            continue
         if filename.startswith('ne'):
-            X.append(load_img(os.path.join('../../data', filename)))
+            X.append(load_img(os.path.join(data_directory, filename)))
             y.append(0)
         if filename.startswith('po'):
-            X.append(load_img(os.path.join('../../data', filename)))
+            X.append(load_img(os.path.join(data_directory, filename)))
             y.append(1)
+
+    # Imagenet files
+    for path, label in zip(['positive', 'negative'], [1, 0]):
+        filepath = os.path.join(data_directory, path)
+        for filename in os.listdir(filepath):
+            if filename[-4:] != '.jpg':
+                continue
+            try:
+                X.append(load_img(os.path.join(filepath, filename)))
+                y.append(label)
+            except IOError as e:
+                print e
+
     X = np.array(X)
     y = np.array(y)
     return train_test_split(X, y, test_size=0.2, shuffle=True, random_state=38)
@@ -36,6 +54,8 @@ X_train, X_test, y_train, y_test = load_dataset()
 
 
 base_model = VGG16(include_top=False, weights='imagenet', input_shape=(224, 224, 3))
+for layer in base_model.layers:
+    layer.trainable = False
 
 # build a classifier model to put on top of the convolutional model
 top_model = Sequential()
@@ -52,10 +72,6 @@ top_model.add(Dense(1, activation='sigmoid'))
 # add the model on top of the convolutional base
 model = Model(inputs=base_model.input, outputs=top_model(base_model.output))
 
-# set the first 25 layers (up to the last conv block)
-# to non-trainable (weights will not be updated)
-# for layer in model.layers[:25]:
-#     layer.trainable = False
 
 # compile the model with a SGD/momentum optimizer
 # and a very slow learning rate.
@@ -63,7 +79,8 @@ model.compile(loss='binary_crossentropy',
               optimizer=SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
 
-model.fit(X_train, y_train, batch_size=16, epochs=10)
+model.fit(X_train, y_train, batch_size=16, epochs=50)
 model.save('retrained_model')
 y_pred = model.predict(X_test)
+import ipdb; ipdb.set_trace()
 print(f1_score(y_test, y_pred))
