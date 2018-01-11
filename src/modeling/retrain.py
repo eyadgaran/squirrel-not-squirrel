@@ -82,5 +82,4 @@ model.compile(loss='binary_crossentropy',
 model.fit(X_train, y_train, batch_size=16, epochs=50)
 model.save('retrained_model')
 y_pred = model.predict(X_test)
-import ipdb; ipdb.set_trace()
-print(f1_score(y_test, y_pred))
+print f1_score(y_test, np.squeeze(y_pred).round())
