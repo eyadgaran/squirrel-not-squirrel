@@ -8,10 +8,10 @@
 
 <div class="container-fluid">
   <img alt="Bootstrap Image Preview" src="static/uploads/{{filename}}" class="img-rounded">
-  <form method=POST enctype=multipart/form-data action="{{ url_for('home') }}">
+  <form method=POST enctype=multipart/form-data action="{{ url_for('model_feedback') }}">
       <h2>Was I right??</h2>
-      <input type="submit" value="Yes :)">
-      <input type="submit" value="No :(">
+      <input type="submit" value="Yes :)" name="user_label">
+      <input type="submit" value="No :(" name="user_label">
   </form>
 </div>
 

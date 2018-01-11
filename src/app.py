@@ -10,6 +10,7 @@ if __name__ == '__main__':
     from views.errors import *
     from views.home import *
     from views.login import *
+    from views.feedback import *
 
     from database import models
 

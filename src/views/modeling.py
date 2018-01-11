@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template, flash, redirect, url_for
+from flask import request, render_template, flash, redirect, url_for
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
 from keras.models import load_model
@@ -7,14 +7,15 @@ import numpy as np
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from src.app import app
 import os
+from src.database.models import ModelHistory, UserLabel
 
-from src.database.models import ModelHistory, Feedback
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
 model = load_model('modeling/retrained_model')
 graph = tf.get_default_graph()
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -49,16 +50,9 @@ def predict(filename):
     return history
 
 
-@app.route('/feedback', methods=['GET'])
-def feedback():
-    return render_template('pages/feedback.html')
-
-
-@app.context_processor
-def feedback_processor():
-    def record_feedback():
-        user_feedback = "blah" #request.form['feedback']
-        Feedback.create(feedback=user_feedback)
-        flash("Your feedback was recorded. Thank You!")
-        return redirect(url_for('home'))
-    return dict(record_feedback=record_feedback)
+@app.route('/record_model_feedback', methods=['POST'])
+def model_feedback():
+    user_label = request.form['user_label']
+    UserLabel.create(user_label=user_label)
+    flash("Thank you for making squirrel-nado smarter!")
+    return redirect(url_for('home'))

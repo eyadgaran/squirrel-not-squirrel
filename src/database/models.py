@@ -37,6 +37,12 @@ class ModelHistory(BaseModel):
     label = Column(Integer)
 
 
+class UserLabel(BaseModel):
+    __tablename__ = 'user_labels'
+
+    id = Column(Integer, primary_key=True)
+    user_label = Column(String(12), nullable=False)
+
 # Create tables.
 # Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)

@@ -6,7 +6,7 @@
   <h1>Feedback</h1>
   <h3>Drop us a line here with your feedback. Feel free to include feature requests, bugs, or anything else that comes to mind!
 </div>
-<form action="{{ record_feedback() }}" method="post">
+<form action="{{ url_for('record_feedback') }}" method="post">
     <input type="text" name="feedback">
     <input type="submit">
 </form>
