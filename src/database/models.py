@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, func
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, func, BigInteger, ForeignKey
 from sqlalchemy_mixins import AllFeaturesMixin
 from src.app import app
 
@@ -42,6 +42,14 @@ class UserLabel(BaseModel):
 
     id = Column(Integer, primary_key=True)
     user_label = Column(String(12), nullable=False)
+
+
+class SquirrelDescription(BaseModel):
+    __tablename__ = "squirrel_descriptions"
+    id = Column(Integer, primary_key=True)
+    filename = Column(String(), unique=True)
+    description = Column(String())
+
 
 # Create tables.
 # Base.metadata.drop_all(bind=engine)

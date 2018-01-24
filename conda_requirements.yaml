@@ -40,6 +40,7 @@ dependencies:
 - wheel=0.29.0=py27_0
 - zlib=1.2.11=0
 - pip:
+  - imagehash==4.0
   - flask-sqlalchemy==2.3.2
   - flask-uploads==0.2.1
   - flask-wtf==0.14.2
@@ -49,4 +50,5 @@ dependencies:
   - sqlalchemy-mixins==0.2.3
   - typing==3.6.2
   - wtforms==2.1
+
 prefix: /Users/elisha.yadgaran/miniconda2/envs/squirrel
