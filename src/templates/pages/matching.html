@@ -1,0 +1,18 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Which Squirrel Am I?{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>HERE WE GO!</h1>
+</div>
+
+<div class="container-fluid">
+  <img alt="Bootstrap Image Preview" src="../static/squirrels/{{filename}}" class="img-rounded">
+</div>
+
+<div>
+    <h3>{{description}}</h3>
+</div>
+
+
+{% endblock %}

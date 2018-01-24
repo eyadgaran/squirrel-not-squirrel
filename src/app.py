@@ -8,7 +8,8 @@ app.config.from_object('config.FlaskConfig')
 if __name__ == '__main__':
     from views.modeling import *
     from views.errors import *
-    from views.home import *
+    from views.squirrel_not_squirrel import *
+    from views.deep_hashing import *
     from views.login import *
     from views.feedback import *
 

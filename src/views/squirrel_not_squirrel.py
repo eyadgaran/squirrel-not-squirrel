@@ -4,9 +4,9 @@ from src.app import app
 
 @app.route('/')
 @app.route('/index')
-@app.route('/home')
-def home():
-    return render_template('pages/home.html')
+@app.route('/squirrel_not_squirrel')
+def squirrel_not_squirrel():
+    return render_template('pages/squirrel_not_squirrel.html')
 
 
 @app.route('/about')
