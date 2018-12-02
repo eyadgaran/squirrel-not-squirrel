@@ -15,7 +15,7 @@ from keras.applications.imagenet_utils import preprocess_input
 from tqdm import tqdm
 
 
-current_directory = os.path.dirname(os.path.realpath(__name__))
+current_directory = os.path.dirname(os.path.realpath(__file__))
 NEGATIVE_IMAGE_DIRECTORY = os.path.abspath(os.path.join(current_directory, '../../data/negative/'))
 POSITIVE_IMAGE_DIRECTORY = os.path.abspath(os.path.join(current_directory, '../../data/positive/'))
 IMAGENET_LINK_DIRECTORY = os.path.abspath(os.path.join(current_directory, '../../data/imagenet_links/'))
