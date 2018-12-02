@@ -1,35 +1,27 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, func, BigInteger, ForeignKey
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, func, BigInteger
 from sqlalchemy_mixins import AllFeaturesMixin
-from src.app import app
 
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-db_session = scoped_session(sessionmaker(autocommit=True,
-                                         autoflush=False,
-                                         bind=engine))
+
 Base = declarative_base()
-# Base.query = db_session.query_property()
 
 
 class BaseModel(Base, AllFeaturesMixin):
     __abstract__ = True
     created_timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    modified_timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), server_onupdate=func.now())
+    modified_timestamp = Column(DateTime(timezone=True), nullable=True, server_onupdate=func.now())
+    id = Column(BigInteger, primary_key=True)
 
 
 class Feedback(BaseModel):
     __tablename__ = 'requests'
 
-    id = Column(Integer, primary_key=True)
     feedback = Column(String(1200), nullable=False)
 
 
 class ModelHistory(BaseModel):
     __tablename__ = 'model_history'
 
-    id = Column(Integer, primary_key=True)
     filename = Column(String(), unique=True)
     prediction_probability = Column(Numeric)
     prediction = Column(Integer)
@@ -40,18 +32,11 @@ class ModelHistory(BaseModel):
 class UserLabel(BaseModel):
     __tablename__ = 'user_labels'
 
-    id = Column(Integer, primary_key=True)
     user_label = Column(String(12), nullable=False)
 
 
 class SquirrelDescription(BaseModel):
     __tablename__ = "squirrel_descriptions"
-    id = Column(Integer, primary_key=True)
+
     filename = Column(String(), unique=True)
     description = Column(String())
-
-
-# Create tables.
-# Base.metadata.drop_all(bind=engine)
-Base.metadata.create_all(bind=engine)
-BaseModel.set_session(db_session)

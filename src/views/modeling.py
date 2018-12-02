@@ -1,23 +1,21 @@
 from flask import request, render_template, flash, redirect, url_for
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
-from keras.models import load_model
 from PIL import Image
 import imagehash
-import tensorflow as tf
 import numpy as np
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from src.app import app
 import os
 from src.database.models import ModelHistory, UserLabel, SquirrelDescription
+from simpleml.utils.scoring.load_persistable import PersistableLoader
 
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
-model = load_model('modeling/retrained_model')
-graph = tf.get_default_graph()
-
+MODEL = PersistableLoader.load_model('squirrel')
+PIPELINE = MODEL.pipeline
 
 @app.route('/upload/<feature>', methods=['GET', 'POST'])
 def upload(feature):
@@ -33,17 +31,14 @@ def upload(feature):
     return render_template('forms/upload.html')
 
 
-# @app.route('/predict', methods=['POST'])
 def predict(filename):
     img = image.load_img(
         os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename),
         target_size=(224, 224))
     x = image.img_to_array(img)
-    x = np.expand_dims(x, axis=0)
-    x = preprocess_input(x)
-    global graph
-    with graph.as_default():
-        prediction_probability = float(model.predict(x))
+    x = preprocess_input(x, mode='tf')
+    x = np.stack([x])
+    prediction_probability = float(MODEL.predict_proba(PIPELINE.transform(x)))
     prediction = int(round(prediction_probability, 0))
 
     # DB
@@ -70,4 +65,3 @@ def model_feedback():
     UserLabel.create(user_label=user_label)
     flash("Thank you for making squirrel-nado smarter!")
     return redirect(url_for('squirrel_not_squirrel'))
-

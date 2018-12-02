@@ -8,7 +8,6 @@
 '''
 from __future__ import print_function
 
-import numpy as np
 import warnings
 
 from keras.models import Model
@@ -19,13 +18,10 @@ from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import GlobalMaxPooling2D
 from keras.layers import GlobalAveragePooling2D
-from keras.preprocessing import image
 from keras.utils import layer_utils
 from keras.utils.data_utils import get_file
 from keras import backend as K
-from keras.applications.imagenet_utils import decode_predictions
-from keras.applications.imagenet_utils import preprocess_input
-from keras.applications.imagenet_utils import _obtain_input_shape
+from keras_applications.imagenet_utils import _obtain_input_shape
 from keras.engine.topology import get_source_inputs
 
 
@@ -188,17 +184,3 @@ def VGG16(include_top=True, weights='imagenet',
                               'your Keras config '
                               'at ~/.keras/keras.json.')
     return model
-
-
-if __name__ == '__main__':
-    model = VGG16(include_top=True, weights='imagenet')
-
-    img_path = 'elephant.jpg'
-    img = image.load_img(img_path, target_size=(224, 224))
-    x = image.img_to_array(img)
-    x = np.expand_dims(x, axis=0)
-    x = preprocess_input(x)
-    print('Input image shape:', x.shape)
-
-    preds = model.predict(x)
-    print('Predicted:', decode_predictions(preds))
