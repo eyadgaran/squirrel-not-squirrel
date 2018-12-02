@@ -9,18 +9,27 @@ from simpleml.utils.initialization import Database
 from models import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+import os
+from os.path import expanduser
+import ConfigParser
+
+
+def parse_cnf(cnf_section):
+    '''
+    Assumes there is a cnf file located at ~/.my.cnf with sections and parameters
+    :param cnf_section: cnf section title for param group
+    :return: dictionary of parameters (None defaults to empty string)
+    '''
+    config = ConfigParser.SafeConfigParser(allow_no_value=True)
+    config.read(os.getenv('CNF_FILE', expanduser("~/.my.cnf")))
+    parameter_dict = dict(config.items(cnf_section))
+
+    return parameter_dict
 
 
 class SimpleMLDatabase(object):
     def __init__(self):
-        self.database_params = {
-            'database': 'SQUIRREL-ML',
-            'user': 'squirrel',
-            'password': None,
-            'jdbc': 'postgresql',
-            'host': 'localhost',
-            'port': 5432
-        }
+        self.database_params = parse_cnf('simpleml')
 
     def initialize(self, create_objects=False):
         db = Database(**self.database_params)
@@ -29,14 +38,7 @@ class SimpleMLDatabase(object):
 
 class AppDatabase(object):
     def __init__(self):
-        self.database_params = {
-            'database': 'SQUIRREL',
-            'user': 'squirrel',
-            'password': None,
-            'jdbc': 'postgresql',
-            'host': 'localhost',
-            'port': 5432
-        }
+        self.database_params = parse_cnf('app')
 
     def initialize(self):
         url = '{jdbc}://{user}:{password}@{host}:{port}/{database}'.format(
