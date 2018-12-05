@@ -26,7 +26,7 @@ class VGGExtendedKerasModel(KerasSequentialClassifier):
 
     def build_network(self, model, **kwargs):
         transfer_model = VGG16(include_top=False, weights='imagenet', input_shape=(224, 224, 3))
-        temp_model = VGG16(include_top=True, weights='imagenet', input_shape=(224, 224, 3))
+        # temp_model = VGG16(include_top=True, weights='imagenet', input_shape=(224, 224, 3))
         base_model = self.clone_network(transfer_model)
 
         # Drop classifier layer
@@ -36,16 +36,17 @@ class VGGExtendedKerasModel(KerasSequentialClassifier):
         # Hack to copy over FC layers without breaking graph
         model.add(base_model)
         model.add(Flatten(name='flatten'))
-        model.add(Dense(4096, activation='relu', name='fc1'))
-        model.add(Dense(4096, activation='relu', name='fc2'))
+        model.add(Dense(1024, activation='relu', name='fc1'))
+        model.add(Dropout(0.3))
+        model.add(Dense(256, activation='relu', name='fc2'))
 
         # Copy over weights and freeze
-        for layer in ['flatten', 'fc1', 'fc2']:
-            model.get_layer(layer).set_weights(temp_model.get_layer(layer).get_weights())
-            model.get_layer(layer).trainable = False
+        # for layer in ['flatten', 'fc1', 'fc2']:
+        #     model.get_layer(layer).set_weights(temp_model.get_layer(layer).get_weights())
+        #     model.get_layer(layer).trainable = False
 
         # Add our own layers and classifier
-        model.add(Dropout(0.6))
+        model.add(Dropout(0.2))
         model.add(Dense(2, activation='softmax'))
 
         # compile the model with a SGD/momentum optimizer

@@ -35,7 +35,7 @@ def train():
 
     # early = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=1, verbose=1, mode='auto')
     model_kwargs = {'name': 'squirrel', 'registered_name': 'VGGExtendedKerasModel',
-                    'params': {'batch_size': 32, 'validation_split': 0.1, 'epochs': 50, 'callbacks': []}}
+                    'params': {'batch_size': 32, 'validation_split': 0.1, 'epochs': 30, 'callbacks': []}}
 
     raw_dataset = RawDatasetCreator.retrieve_or_create(**raw_dataset_kwargs)
     dataset_pipeline = DatasetPipelineCreator.retrieve_or_create(raw_dataset=raw_dataset, **dataset_pipeline_kwargs)
