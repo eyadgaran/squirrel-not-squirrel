@@ -45,7 +45,7 @@ def train():
     model = ModelCreator.retrieve_or_create(pipeline=pipeline, **model_kwargs)
 
     # Evaluate Metrics
-    metrics_to_score = ['RocAucMetric'] #['F1ScoreMetric', 'AccuracyMetric', 'TprMetric', 'FprMetric', 'RocAucMetric']
+    metrics_to_score = ['RocAucMetric', 'F1ScoreMetric', 'AccuracyMetric', 'TprMetric', 'FprMetric', 'RocAucMetric']
     dataset_splits = [TRAIN_SPLIT, TEST_SPLIT]
     for cls, dataset_split in product(metrics_to_score, dataset_splits):
         metric_kwargs = {'registered_name': cls, 'dataset_split': dataset_split}
