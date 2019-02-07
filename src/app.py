@@ -6,7 +6,6 @@ class FlaskConfig(object):
     # Secret key for session management. You can generate random strings here:
     # http://clsc.net/tools-old/random-string-generator.php
     SECRET_KEY = 'squirrel-nado'
-    UPLOADED_PHOTOS_DEST = 'static/uploads'
     # Flask-WTF flag for CSRF
     CSRF_ENABLED = True
 

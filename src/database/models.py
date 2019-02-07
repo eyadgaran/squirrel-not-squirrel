@@ -22,7 +22,7 @@ class Feedback(BaseModel):
 class ModelHistory(BaseModel):
     __tablename__ = 'model_history'
 
-    filename = Column(String(), unique=True)
+    filename = Column(String())
     prediction_probability = Column(Numeric)
     prediction = Column(Integer)
     user_label = Column(Integer)

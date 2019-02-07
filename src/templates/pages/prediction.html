@@ -7,7 +7,7 @@
 </div>
 
 <div class="container-fluid">
-  <img alt="Bootstrap Image Preview" src="../static/uploads/{{filename}}" class="img-rounded">
+  <img alt="Bootstrap Image Preview" src="data:image/png;base64,{{ image }}" class="img-rounded">
   <form method=POST enctype=multipart/form-data action="{{ url_for('model_feedback') }}">
       <h2>Was I right??</h2>
       <input type="submit" value="Yes :)" name="user_label">
