@@ -5,7 +5,7 @@ Module to define the dataset(s) used for training and validation
 __author__ = 'Elisha Yadgaran'
 
 
-from simpleml.datasets.raw_datasets.base_raw_dataset import BaseNumpyRawDataset
+from simpleml.datasets import NumpyDataset
 
 import os
 import numpy as np
@@ -24,7 +24,7 @@ POSITIVE_LABEL = 1
 IMAGENET_POSITIVE_LABEL = 'squirrel'
 
 
-class ImageLoadingDataset(BaseNumpyRawDataset):
+class ImageLoadingDataset(NumpyDataset):
     def download_images(self):
         # Check if already downloaded before doing anything
         already_downloaded = self.state.get('links_downloaded', False)

@@ -8,7 +8,7 @@ __author__ = 'Elisha Yadgaran'
 from simpleml.models.classifiers.keras.sequential import KerasSequentialClassifier
 
 # from keras.applications import VGG16
-from vgg16 import VGG16
+from .vgg16 import VGG16
 from keras.optimizers import SGD
 from keras.layers import Dense, Flatten, Dropout
 from keras.models import clone_model

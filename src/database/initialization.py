@@ -27,13 +27,10 @@ def parse_cnf(cnf_section):
     return parameter_dict
 
 
-class SimpleMLDatabase(object):
+class SimpleMLDatabase(Database):
     def __init__(self):
-        self.database_params = parse_cnf('simpleml')
-
-    def initialize(self, create_objects=False):
-        db = Database(**self.database_params)
-        db.initialize(create_database=create_objects)
+        database_params = parse_cnf('simpleml')
+        super(SimpleMLDatabase, self).__init__(**database_params)
 
 
 class AppDatabase(object):
