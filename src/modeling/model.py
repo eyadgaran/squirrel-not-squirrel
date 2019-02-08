@@ -5,56 +5,101 @@ Module to define the model(s) used
 __author__ = 'Elisha Yadgaran'
 
 
-from simpleml.models.classifiers.keras.sequential import KerasSequentialClassifier
+from simpleml.models import KerasSequentialClassifier
+from simpleml.utils.errors import ModelError
+from simpleml import TRAIN_SPLIT, VALIDATION_SPLIT
 
-# from keras.applications import VGG16
-from .vgg16 import VGG16
-from keras.optimizers import SGD
-from keras.layers import Dense, Flatten, Dropout
-from keras.models import clone_model
+from keras.layers import Dense, Dropout
+
+import logging
+LOGGER = logging.getLogger(__name__)
 
 
-class VGGExtendedKerasModel(KerasSequentialClassifier):
-    @staticmethod
-    def clone_network(model, drop_layers=None):
-        # Tensorflow graphs are append only so popping layers causes errors
-        # when get_config is called for saving/loading
-        model_copy = clone_model(model)
-        model_copy.set_weights(model.get_weights())
+class GeneratorModel(KerasSequentialClassifier):
+    '''
+    Extends Base Keras Model to support data generators for fitting
 
-        return model_copy
+    ONLY use with supporting pipeline!
+    '''
+    def fit(self, train_generator=None, validation_generator=None, **kwargs):
+        '''
+        Pass through method to external model after running through pipeline
 
+        Optionally overwrite normal method to pass in the generator directly. Used
+        to speedup training by caching the transformed input before training the
+        model - avoids downloading, reading, encoding images in every batch
+        '''
+        if self.pipeline is None:
+            raise ModelError('Must set pipeline before fitting')
+
+        if self.state['fitted']:
+            LOGGER.warning('Cannot refit model, skipping operation')
+            return self
+        if train_generator is None:
+            # Explicitly fit only on train split
+            train_generator = self.pipeline.transform(X=None, dataset_split=TRAIN_SPLIT, return_y=True, infinite_loop=True, **self.get_params())
+            validation_generator = self.pipeline.transform(X=None, dataset_split=VALIDATION_SPLIT, return_y=True, infinite_loop=True, **self.get_params())
+
+        self._fit(train_generator, validation_generator)
+
+        # Mark the state so it doesnt get refit and can now be saved
+        self.state['fitted'] = True
+
+        return self
+
+    def _fit(self, train_generator, validation_generator=None):
+        '''
+        Keras fit parameters (epochs, callbacks...) are stored as self.params so
+        retrieve them automatically
+        '''
+        # Generator doesnt take arbitrary params so pop the extra ones
+        extra_params = ['batch_size']
+        params = {k:v for k, v in self.get_params().items() if k not in extra_params}
+        self.external_model.fit_generator(
+            generator=train_generator, validation_data=validation_generator, **params)
+
+
+class RetrainedTopModel(GeneratorModel):
+    '''
+    Retrained top layer of some transfer learned model
+    '''
     def build_network(self, model, **kwargs):
-        transfer_model = VGG16(include_top=False, weights='imagenet', input_shape=(224, 224, 3))
-        # temp_model = VGG16(include_top=True, weights='imagenet', input_shape=(224, 224, 3))
-        base_model = self.clone_network(transfer_model)
+        '''
+        training network
 
-        # Drop classifier layer
-        for layer in base_model.layers:
-            layer.trainable = False
+        Input:
+            X = [image embeddings]
+            y = [labels]
 
-        # Hack to copy over FC layers without breaking graph
-        model.add(base_model)
-        model.add(Flatten(name='flatten'))
-        model.add(Dense(1024, activation='relu', name='fc1'))
-        model.add(Dropout(0.3))
-        model.add(Dense(256, activation='relu', name='fc2'))
+        Output:
+            y = [predictions]
+        '''
+        IMG_EMBED_SIZE = 2048  # InceptionV3 output
 
-        # Copy over weights and freeze
-        # for layer in ['flatten', 'fc1', 'fc2']:
-        #     model.get_layer(layer).set_weights(temp_model.get_layer(layer).get_weights())
-        #     model.get_layer(layer).trainable = False
+        # Save config values for later
+        new_configs =  {
+                'IMG_EMBED_SIZE': IMG_EMBED_SIZE,
+        }
+        self.config.update(new_configs)
 
-        # Add our own layers and classifier
-        model.add(Dropout(0.2))
-        model.add(Dense(2, activation='softmax'))
+        ###############
+        # Image Input #
+        ###############
+        # [batch_size, IMG_EMBED_SIZE] of CNN image features
+        # model.add(Input(shape=(IMG_EMBED_SIZE,), dtype='float32', name='image_input'))
+        model.add(Dense(1024, activation='relu', name='top_layer1',
+                        input_shape=(IMG_EMBED_SIZE,), dtype='float32'))
+        model.add(Dropout(0.5))
+        model.add(Dense(512, activation='relu', name='top_layer2'))
+        model.add(Dense(512, activation='relu', name='top_layer3'))
+        model.add(Dense(2, activation='softmax', name='prediction'))
 
-        # compile the model with a SGD/momentum optimizer
-        # and a very slow learning rate.
         model.compile(loss='sparse_categorical_crossentropy',
-                      optimizer=SGD(lr=1e-4, momentum=0.9),
+                      optimizer='adam',
                       metrics=['accuracy'])
 
-        print model.summary()
+        print(model.summary())
+        # from keras.utils.vis_utils import plot_model
+        # plot_model(model, to_file='model.png', show_shapes=True)
 
         return model

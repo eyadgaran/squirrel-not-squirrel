@@ -5,13 +5,13 @@ Module to define the dataset(s) used for training and validation
 __author__ = 'Elisha Yadgaran'
 
 
-from simpleml.datasets import NumpyDataset
+from simpleml.datasets import PandasDataset
 
 import os
 import numpy as np
+import pandas as pd
 import requests
-from keras.preprocessing import image
-from keras.applications.imagenet_utils import preprocess_input
+import cv2
 from tqdm import tqdm
 
 
@@ -24,7 +24,7 @@ POSITIVE_LABEL = 1
 IMAGENET_POSITIVE_LABEL = 'squirrel'
 
 
-class ImageLoadingDataset(NumpyDataset):
+class ImageLoadingDataset(PandasDataset):
     def download_images(self):
         # Check if already downloaded before doing anything
         already_downloaded = self.state.get('links_downloaded', False)
@@ -62,30 +62,25 @@ class ImageLoadingDataset(NumpyDataset):
         self.state['links_downloaded'] = True
 
     def load_images(self, directory_path, label):
-        image_list = []
+        file_list = []
         for filename in tqdm(os.listdir(directory_path)):
             filepath = os.path.join(directory_path, filename)
             if os.path.isfile(filepath):
-                try:
-                    img = image.load_img(filepath, target_size=(224, 224))
-                    x = image.img_to_array(img)
-                    # Need to store arrays as a list because numpy doesnt have a hash function
-                    image_list.append(preprocess_input(x, mode='tf'))
-                except IOError as e:
+                try:  # Attempt to load files because many are corrupted or blank
+                    img = cv2.imdecode(np.asarray(bytearray(open(filepath, "rb").read()), dtype=np.uint8), 1)
+                    cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    file_list.append(filepath.decode('UTF-8'))
+                except (IOError, cv2.error) as e:
                     print e
 
-        image_tuple = (np.stack(image_list), np.repeat(label, len(image_list)))
-
-        return image_tuple
+        return pd.DataFrame(list(zip(file_list, [label] * len(file_list))),
+                            columns=['image', 'label'])
 
 
 class SquirrelDataset(ImageLoadingDataset):
     def build_dataframe(self):
         # self.download_images()
-        negative_matrix, negative_label = self.load_images(NEGATIVE_IMAGE_DIRECTORY, NEGATIVE_LABEL)
-        positive_matrix, positive_label = self.load_images(POSITIVE_IMAGE_DIRECTORY, POSITIVE_LABEL)
+        negative_df = self.load_images(NEGATIVE_IMAGE_DIRECTORY, NEGATIVE_LABEL)
+        positive_df = self.load_images(POSITIVE_IMAGE_DIRECTORY, POSITIVE_LABEL)
 
-        self._external_file = {
-            'X': np.concatenate((negative_matrix, positive_matrix)),
-            'y': np.concatenate((negative_label, positive_label))
-        }
+        self._external_file = pd.concat([negative_df, positive_df], axis=0)
