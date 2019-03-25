@@ -1,3 +1,3 @@
-import dataset
-import pipeline
-import model
+from . import dataset
+from . import pipeline
+from . import model

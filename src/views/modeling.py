@@ -1,15 +1,13 @@
 from flask import request, render_template, flash, redirect, url_for
 import imagehash
-from src.app import app
 from src.database.models import ModelHistory, UserLabel, SquirrelDescription
 from simpleml.utils.scoring.load_persistable import PersistableLoader
 import base64
 import pandas as pd
 
-
 MODEL = PersistableLoader.load_model('squirrel')
 
-@app.route('/upload/<feature>', methods=['GET', 'POST'])
+
 def upload(feature):
     if request.method == 'POST' and 'photo' in request.files:
         filename = request.files['photo'].filename
@@ -46,7 +44,6 @@ def get_hash(image_stream):
     return SquirrelDescription.find(pic_id)
 
 
-@app.route('/record_model_feedback', methods=['POST'])
 def model_feedback():
     user_label = request.form['user_label']
     UserLabel.create(user_label=user_label)

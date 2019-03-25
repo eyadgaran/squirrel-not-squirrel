@@ -23,7 +23,7 @@ def import_squirrels(description_file):
     conn.commit()
     cur.close()
     conn.close()
-    print "done inserting descriptions!"
+    print("done inserting descriptions!")
 
 
 if __name__ == "__main__":

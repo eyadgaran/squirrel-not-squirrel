@@ -56,7 +56,7 @@ class ImageLoadingDataset(PandasDataset):
                         with open(os.path.join(directory, filename), 'wb') as f:
                             f.write(response.content)
                 except Exception as e: #requests.exceptions.ConnectionError as e:
-                    print e
+                    print(e)
 
         # Make note that links were downloaded so it wont do it again
         self.state['links_downloaded'] = True
@@ -71,7 +71,7 @@ class ImageLoadingDataset(PandasDataset):
                     cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     file_list.append(filepath.decode('UTF-8'))
                 except (IOError, cv2.error) as e:
-                    print e
+                    print(e)
 
         return pd.DataFrame(list(zip(file_list, [label] * len(file_list))),
                             columns=['image', 'label'])

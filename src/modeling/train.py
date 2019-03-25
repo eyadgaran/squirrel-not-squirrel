@@ -10,17 +10,17 @@ __author__ = 'Elisha Yadgaran'
 # import logging
 # logging.getLogger("plaidml").setLevel(logging.CRITICAL)
 
-from simpleml.utils.training.create_persistable import \
+from simpleml.utils import \
     DatasetCreator, PipelineCreator, ModelCreator, MetricCreator
 from simpleml import TRAIN_SPLIT, TEST_SPLIT
 from itertools import product
-from simpleml.utils.scoring.load_persistable import PersistableLoader
+from simpleml.utils import PersistableLoader
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
 
 from src.database.initialization import SimpleMLDatabase
-from src.modeling.dataset import *
-from src.modeling.pipeline import *
-from src.modeling.model import *
+from .dataset import *
+from .pipeline import *
+from .model import *
 
 
 def train():
@@ -29,11 +29,11 @@ def train():
 
     # Build the Dataset
     dataset_kwargs = {'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'SquirrelDataset',
-                          'label_columns': ['label'], 'strict': False, 'save_method': 'disk_pickled'}
+                          'label_columns': ['label'], 'strict': False, 'save_method': 'cloud_pickled'}
     pipeline_kwargs = {
         'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'RandomSplitPipeline',
         'fitted': True, 'train_size': 0.8, 'validation_size': 0.0, 'test_size': 0.2,
-        'shuffle': True, 'random_state': 38, 'strict': False,
+        'shuffle': True, 'random_state': 38, 'strict': False, 'save_method': 'cloud_pickled',
         'transformers': [
              ('load_images', ImageLoader()),
              ('crop', CropImageToSquares()),
@@ -47,6 +47,7 @@ def train():
     early = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=3, verbose=1, mode='auto')
     model_kwargs = {
         'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'VGGExtendedKerasModel',
+        'save_method': 'cloud_keras_hdf5',
         'params': {'batch_size': 32, 'callbacks': [early],
                    'epochs': 500, 'steps_per_epoch': 100, 'validation_steps': 50,
                    'use_multiprocessing': False, 'workers': 0}
@@ -74,7 +75,7 @@ def train():
     for cls, dataset_split in product(metrics_to_score, dataset_splits):
         metric_kwargs = {'registered_name': cls, 'dataset_split': dataset_split}
         metric = MetricCreator.retrieve_or_create(model=model, **metric_kwargs)
-        print metric.name, metric.values
+        print(metric.name, metric.values)
 
 
 if __name__ == '__main__':
