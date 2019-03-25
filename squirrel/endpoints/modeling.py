@@ -1,6 +1,13 @@
+'''
+Main module for "modeling" endpoints
+'''
+
+__author__ = 'Elisha Yadgaran'
+
+
 from flask import request, render_template, flash, redirect, url_for
 import imagehash
-from src.database.models import ModelHistory, UserLabel, SquirrelDescription
+from squirrel.database.models import ModelHistory, UserLabel, SquirrelDescription
 from simpleml.utils.scoring.load_persistable import PersistableLoader
 import base64
 import pandas as pd

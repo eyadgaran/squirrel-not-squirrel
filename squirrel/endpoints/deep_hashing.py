@@ -1,3 +1,7 @@
+'''
+Module for "which squirrel" endpoint
+'''
+
 from flask import render_template
 
 

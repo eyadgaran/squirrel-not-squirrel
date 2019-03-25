@@ -1,3 +1,10 @@
+'''
+Module for database tables
+'''
+
+__author__ = 'Elisha Yadgaran'
+
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Numeric, DateTime, func, BigInteger
 from sqlalchemy_mixins import AllFeaturesMixin

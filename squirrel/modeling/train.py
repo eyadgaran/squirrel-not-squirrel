@@ -17,7 +17,7 @@ from itertools import product
 from simpleml.utils import PersistableLoader
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
 
-from src.database.initialization import SimpleMLDatabase
+from squirrel.database.initialization import SimpleMLDatabase
 from .dataset import *
 from .pipeline import *
 from .model import *
@@ -46,7 +46,7 @@ def train():
 
     early = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=3, verbose=1, mode='auto')
     model_kwargs = {
-        'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'VGGExtendedKerasModel',
+        'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'RetrainedTopModel',
         'save_method': 'cloud_keras_hdf5',
         'params': {'batch_size': 32, 'callbacks': [early],
                    'epochs': 500, 'steps_per_epoch': 100, 'validation_steps': 50,

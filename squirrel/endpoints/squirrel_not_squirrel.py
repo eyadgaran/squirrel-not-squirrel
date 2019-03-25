@@ -1,3 +1,10 @@
+'''
+Module for "Home" endpoint
+'''
+
+__author__ = 'Elisha Yadgaran'
+
+
 from flask import render_template
 
 

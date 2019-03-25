@@ -1,3 +1,10 @@
+'''
+Module for "error" endpoints
+'''
+
+__author__ = 'Elisha Yadgaran'
+
+
 from flask import render_template
 
 

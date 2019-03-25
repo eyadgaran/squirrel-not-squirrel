@@ -1,5 +1,12 @@
+'''
+Module for "feedback" endpoints
+'''
+
+__author__ = 'Elisha Yadgaran'
+
+
 from flask import render_template, redirect, url_for, flash, request
-from src.database.models import Feedback
+from squirrel.database.models import Feedback
 
 
 def feedback():

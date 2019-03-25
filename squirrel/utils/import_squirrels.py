@@ -1,6 +1,6 @@
 import os
 import zipfile
-from src.config import parse_cnf
+from squirrel.config import parse_cnf
 import psycopg2
 
 
