@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-setup(name='squirrel-not-squirrel',
+setup(name='squirrel',
       version='2.0',
       description='Squirrel-not-Squirrel App',
-      url='',
+      url='https://github.com/eyadgaran/squirrel-watch.git',
       author=['Elisha Yadgaran', 'Justin Su'],
       author_email=['elisha.yadgaran@qpidhealth.com', 'justin.su@qpidhealth.com'],
       license='MIT',

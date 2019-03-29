@@ -12,7 +12,7 @@ from simpleml.utils.scoring.load_persistable import PersistableLoader
 import base64
 import pandas as pd
 
-MODEL = PersistableLoader.load_model('squirrel')
+MODEL = None  #PersistableLoader.load_model('squirrel')  # Debug cloud deployment
 
 
 def upload(feature):
