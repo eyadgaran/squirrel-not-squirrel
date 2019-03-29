@@ -44,7 +44,7 @@ def train():
         ]
     }
 
-    early = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=3, verbose=1, mode='auto')
+    early = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=10, verbose=1, mode='auto')
     model_kwargs = {
         'project': 'squirrel', 'name': 'squirrel', 'registered_name': 'RetrainedTopModel',
         'save_method': 'cloud_keras_hdf5',

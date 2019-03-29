@@ -6,6 +6,7 @@ __author__ = 'Elisha Yadgaran'
 
 
 from simpleml.transformers import Transformer
+from simpleml.utils import FILESTORE_DIRECTORY
 
 from keras.models import Model
 from keras.layers import GlobalAveragePooling2D
@@ -150,15 +151,15 @@ def encode_all_images(df, pipeline, split):
     transformed = pipeline.transform(df)
 
     # 2) Save encoded images
-    np.save('encoded_images_' + split, transformed)
+    np.save(os.path.join(FILESTORE_DIRECTORY, '/temp/encoded_images_') + split, transformed)
 
 
 def preprocessed_generator(pipeline, split, infinite_loop=False, batch_size=32, shuffle=True, **kwargs):
-    X = np.load(os.getenv('ENCODED_IMAGE_PATH', 'encoded_images_') + split + '.npy')
+    X = np.load(os.getenv('ENCODED_IMAGE_PATH', os.path.join(FILESTORE_DIRECTORY, '/temp/encoded_images_')) + split + '.npy')
     y = pipeline.get_dataset_split(split)[1].values
 
     dataset_size = X.shape[0]
-    indices = range(dataset_size)
+    indices = list(range(dataset_size))
 
     if dataset_size == 0:  # Return None
         return

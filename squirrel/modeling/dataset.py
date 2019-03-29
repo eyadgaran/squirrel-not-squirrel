@@ -69,7 +69,8 @@ class ImageLoadingDataset(PandasDataset):
                 try:  # Attempt to load files because many are corrupted or blank
                     img = cv2.imdecode(np.asarray(bytearray(open(filepath, "rb").read()), dtype=np.uint8), 1)
                     cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    file_list.append(filepath.decode('UTF-8'))
+                    # file_list.append(filepath.decode('UTF-8'))  # Python 2
+                    file_list.append(filepath)  # Python 3
                 except (IOError, cv2.error) as e:
                     print(e)
 
