@@ -1,0 +1,11 @@
+runtime: python37
+
+env_variables:
+  SIMPLEML_CONFIGURATION_FILE: /srv/secrets.conf
+
+entrypoint: gunicorn -w 1 main:app
+
+instance_class: F4
+
+automatic_scaling:
+  max_instances: 1
