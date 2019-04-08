@@ -2,8 +2,8 @@
 Module for "which squirrel" endpoint
 '''
 
-from flask import render_template
+from quart import render_template
 
 
-def which_squirrel():
-    return render_template('pages/which_squirrel.html')
+async def which_squirrel():
+    return await render_template('pages/which_squirrel.html')

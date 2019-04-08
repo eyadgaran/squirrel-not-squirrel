@@ -31,7 +31,7 @@ class ImageLoader(Transformer):
 
     def load(self, filepath):
         if self.get('mode') == 'any':
-            if filepath.startswith('http'):
+            if filepath.startswith(b'http'):
                 raw_img = self.download(filepath)
             elif len(filepath) > 10000:  # Assume binary string
                 raw_img = filepath

@@ -1,4 +1,4 @@
-from flask import Flask
+from quart import Quart
 from squirrel.database.initialization import SimpleMLDatabase, AppDatabase
 from squirrel import TEMPLATE_PATH, STATIC_PATH
 
@@ -11,7 +11,8 @@ class FlaskConfig(object):
     CSRF_ENABLED = True
 
 
-app = Flask(__name__, template_folder=TEMPLATE_PATH, static_folder=STATIC_PATH)
+app = Quart(__name__, template_folder=TEMPLATE_PATH, static_folder=STATIC_PATH)
+app.config.from_object(FlaskConfig)
 SimpleMLDatabase().initialize()
 AppDatabase().initialize()
 
@@ -34,5 +35,5 @@ app.add_url_rule('/upload/<feature>', 'upload', upload, methods=['GET', 'POST'])
 app.add_url_rule('/record_model_feedback', 'model_feedback', model_feedback, methods=['POST'])
 
 if __name__ == '__main__':
-    print(app.url_map)
+    # print(app.url_map.endpoints)
     app.run(host='127.0.0.1', port=8081, debug=False)
