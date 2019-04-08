@@ -28,6 +28,7 @@ class ModelWrapper(object):
     '''
     def __init__(self):
         self._model = None
+        self._graph = None
         self.concurrent_load_model()
 
     @property
@@ -36,6 +37,12 @@ class ModelWrapper(object):
             self.load_model()
         return self._model
 
+    @property
+    def graph(self):
+        if self._graph is None:
+            self.load_model()
+        return self._graph
+
     def predict_proba(self, *args):
         with self.graph.as_default():
             return self.model.predict_proba(*args)
@@ -43,7 +50,7 @@ class ModelWrapper(object):
     def load_model(self):
         self._model = PersistableLoader.load_model('squirrel')
         self._model.load(load_externals=True)
-        self.graph = tf.get_default_graph()
+        self._graph = tf.get_default_graph()
 
     def async_load_model(self):
         event_loop = asyncio.new_event_loop()
