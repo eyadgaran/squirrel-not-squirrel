@@ -14,6 +14,8 @@ import pandas as pd
 import asyncio
 import threading
 import tensorflow as tf
+from PIL import Image
+from io import BytesIO
 
 
 class ModelWrapper(object):
@@ -29,7 +31,7 @@ class ModelWrapper(object):
     def __init__(self):
         self._model = None
         self._graph = None
-        self.concurrent_load_model()
+        # self.concurrent_load_model()
 
     @property
     def model(self):
@@ -97,7 +99,8 @@ async def predict(filename, image_stream):
 
 
 def get_hash(image_stream):
-    hash = imagehash.average_hash(image_stream)
+    image = Image.open(BytesIO(image_stream))
+    hash = imagehash.average_hash(image)
     num_of_pics = len(SquirrelDescription.all())
     pic_id = int(str(hash), 16) % num_of_pics + 1
     return SquirrelDescription.find(pic_id)

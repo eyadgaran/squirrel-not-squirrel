@@ -6,15 +6,21 @@
   <h1>Squirrel, Not Squirrel?</h1>
 </div>
 
-<div class="container-fluid">
+<div id="upload" class="container-fluid">
   <img alt="Bootstrap Image Preview" src="https://i.ytimg.com/vi/4yikpWtIFU8/maxresdefault.jpg"
        width="1000" height="565" class="img-rounded">
   <form method=POST enctype=multipart/form-data action="{{ url_for('upload', feature='squirrel_not_squirrel') }}">
       <input type=file name=photo>
-      <input type="submit" value="Upload">
+      <input type="submit" value="Upload" onclick="$('#loading').show(); $('#upload').hide();">
   </form>
 </div>
 
+<div id="loading" class="container-fluid" style="display:none; position:relative; left:0; top:0;">
+  <img alt="Processing..." src="https://rlv.zcache.com/squirrel_thinking_about_nut_tote_bag-rea730eebf12e472587e2e1133c5cfa76_v9wtg_8byvr_522.jpg?rvtype=content"
+       width="600" height="600" class="img-rounded" style="position:relative; top:0px; left:0px; z-index:1;">
+  <img alt="" src="https://media3.giphy.com/media/970Sr8vpwEbXG/200.webp?cid=790b76115cb52dcc626a6d782e4e22e9"
+        width="100" height="100" class="img-rounded" style="position:absolute; top:250px; left:250px; z-index:2;">
+</div>
 
 
 {% endblock %}
