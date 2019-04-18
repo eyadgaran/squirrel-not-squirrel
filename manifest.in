@@ -1,0 +1,3 @@
+graft squirrel/static
+graft squirrel/templates
+global-exclude *.pyc

@@ -1,0 +1,11 @@
+runtime: python37
+
+env_variables:
+  SIMPLEML_CONFIGURATION_FILE: /srv/secrets.conf
+
+entrypoint: hypercorn -w 1 main:app -k uvloop -b 127.0.0.1:8081
+
+instance_class: F4
+
+automatic_scaling:
+  max_instances: 1
