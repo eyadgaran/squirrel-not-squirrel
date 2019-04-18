@@ -4,4 +4,4 @@ Fun little demonstration of transfer learning in a production capacity. Squirrel
 
 Why a squirrel? Because it is our company's mascot! And who doesn't love squirrels?
 
-Check it out! squirrel-not-squirrel.qpidhealth.net
+Check it out! squirrel-not-squirrel.projects.yadgaran.net
