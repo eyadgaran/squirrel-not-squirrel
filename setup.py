@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(name='squirrel',
       version='2.0',
@@ -7,7 +7,7 @@ setup(name='squirrel',
       author=['Elisha Yadgaran', 'Justin Su'],
       author_email=['elisha.yadgaran@qpidhealth.com', 'justin.su@qpidhealth.com'],
       license='MIT',
-      packages=find_packages(),
+      packages=['squirrel'],
       install_requires=[
           'flask',
           'sqlalchemy',
@@ -25,4 +25,5 @@ setup(name='squirrel',
       tests_require=['nose'],
       zip_safe=False,
       include_package_data=True,
+      package_data={'squirrel': ['templates/*', 'static/*']},
     )
