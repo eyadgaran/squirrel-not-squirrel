@@ -1,3 +1,3 @@
-graft squirrel/static
-graft squirrel/templates
+recursive-include squirrel/templates *
+recursive-include squirrel/static *
 global-exclude *.pyc
