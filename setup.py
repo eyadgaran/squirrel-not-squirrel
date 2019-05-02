@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='squirrel',
       version='2.0',
@@ -7,7 +7,7 @@ setup(name='squirrel',
       author=['Elisha Yadgaran', 'Justin Su'],
       author_email=['elisha.yadgaran@qpidhealth.com', 'justin.su@qpidhealth.com'],
       license='MIT',
-      packages=['squirrel'],
+      packages=find_packages(),
       install_requires=[
           'flask',
           'sqlalchemy',
