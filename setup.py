@@ -25,6 +25,5 @@ setup(name='squirrel',
       tests_require=['nose'],
       zip_safe=False,
       include_package_data=True,
-      package_dir={'squirrel':''},
       package_data={'squirrel': ['templates/*', 'static/*']},
     )
