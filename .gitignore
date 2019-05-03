@@ -11,3 +11,4 @@
 *secrets*
 *.npy
 *.zip
+gcp*.json
