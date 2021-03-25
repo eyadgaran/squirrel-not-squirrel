@@ -39,7 +39,7 @@ python-dateutil==2.8.0
 python-editor==1.0.4
 pytz==2018.9
 PyWavelets==1.0.2
-PyYAML==5.1
+PyYAML==5.4
 git+https://gitlab.com/pgjones/quart.git@master#egg=quart
 requests==2.21.0
 scikit-learn==0.20.3
