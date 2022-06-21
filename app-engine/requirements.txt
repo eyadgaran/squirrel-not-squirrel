@@ -27,7 +27,7 @@ Mako==1.0.8
 Markdown==3.0.1
 MarkupSafe==1.1.1
 mock==2.0.0
-numpy==1.16.2
+numpy==1.22.0
 opencv-python==4.0.0.21
 pandas==0.24.2
 pbr==5.1.3
